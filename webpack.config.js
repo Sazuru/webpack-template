@@ -10,6 +10,17 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  devServer: {
+    port: 8080,
+  }
+  resolve: {
+    alias: {},
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    }
+  }
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
