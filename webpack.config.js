@@ -7,6 +7,7 @@ const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const isDevMode = process.env.NODE_ENV === 'development';
+const isProductionMode = !isDevMode;
 const optimization = () => {
   const config = {
     splitChunks: {
@@ -14,19 +15,22 @@ const optimization = () => {
     },
   };
 
-  if (!isDevMode) {
-    config.minimizer = {
-      minimizer: [new TerserJSPlugin(), new OptimizeCSSAssetsPlugin()],
-    };
+  if (isProductionMode) {
+    config.minimizer = [new OptimizeCSSAssetsPlugin(), new TerserJSPlugin()];
   }
+
+  return config;
 };
+
+const filename = (extension) =>
+  isDevMode ? `[name].${extension}` : `[name].[hash].${extension}`;
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
   entry: './index.js',
   output: {
-    filename: 'bundle.js',
+    filename: filename('js'),
     path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
@@ -50,7 +54,7 @@ module.exports = {
       { from: 'assets/fonts', to: 'fonts' },
     ]),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
+      filename: filename('css'),
       chunkFilename: '[id].css',
       ignoreOrder: false,
     }),

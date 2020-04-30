@@ -4,7 +4,7 @@
   "description": "Webpack template for future projects",
   "main": "index.js",
   "scripts": {
-    "dev": "--mode development",
+    "dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production"
   },
