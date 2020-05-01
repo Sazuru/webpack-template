@@ -22,8 +22,7 @@ const optimization = () => {
   return config;
 };
 
-const filename = (extension) =>
-  isDevMode ? `[name].${extension}` : `[name].[hash].${extension}`;
+const filename = (extension) => (isDevMode ? `[name].${extension}` : `[name].[hash].${extension}`);
 
 const cssLoaders = (extra) => {
   const loaders = [
@@ -43,6 +42,23 @@ const cssLoaders = (extra) => {
   return loaders;
 };
 
+const jsLoaders = () => {
+  const loaders = [
+    {
+      loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env'],
+      },
+    },
+  ];
+
+  if (isDevMode) {
+    loaders.push('eslint-loader');
+  }
+
+  return loaders;
+};
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
@@ -59,6 +75,7 @@ module.exports = {
     alias: {},
   },
   optimization: optimization(),
+  devtool: isDevMode ? 'source-map' : '',
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
@@ -114,12 +131,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
+        use: jsLoaders(),
       },
     ],
   },
