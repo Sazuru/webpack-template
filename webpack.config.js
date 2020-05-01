@@ -22,7 +22,8 @@ const optimization = () => {
   return config;
 };
 
-const filename = (extension) => (isDevMode ? `[name].${extension}` : `[name].[hash].${extension}`);
+const filename = (extension) =>
+  isDevMode ? `[name].${extension}` : `[name].[contenthash].${extension}`;
 
 const cssLoaders = (extra) => {
   const loaders = [
