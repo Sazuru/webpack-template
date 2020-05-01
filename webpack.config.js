@@ -25,10 +25,28 @@ const optimization = () => {
 const filename = (extension) =>
   isDevMode ? `[name].${extension}` : `[name].[hash].${extension}`;
 
+const cssLoaders = (extra) => {
+  const loaders = [
+    {
+      loader: MiniCssExtractPlugin.loader,
+      options: {
+        hmr: isDevMode,
+        reloadAll: true,
+      },
+    },
+    'css-loader',
+  ];
+
+  if (extra) {
+    loaders.push(extra);
+  }
+  return loaders;
+};
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
-  entry: './index.js',
+  entry: ['@babel/polyfill', './index.js'],
   output: {
     filename: filename('js'),
     path: path.resolve(__dirname, 'dist'),
@@ -45,7 +63,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       template: './index.html',
       minify: {
-        collapseWhitespace: !isDevMode,
+        collapseWhitespace: isProductionMode,
       },
     }),
     new CleanWebpackPlugin(),
@@ -63,30 +81,11 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: isDevMode,
-              reloadAll: true,
-            },
-          },
-          'css-loader',
-        ],
+        use: cssLoaders(),
       },
       {
         test: /\.s[ac]ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              hmr: isDevMode,
-              reloadAll: true,
-            },
-          },
-          'css-loader',
-          'sass-loader',
-        ],
+        use: cssLoaders('sass-loader'),
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -111,6 +110,16 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+          },
+        },
       },
     ],
   },
