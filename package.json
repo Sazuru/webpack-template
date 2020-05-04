@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack --mode development",
     "start": "webpack-dev-server --mode development --open",
-    "build": "webpack --mode production"
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "repository": "https://github.com/Sazuru/webpack-template.git",
   "author": "Valentin Ageev <sazuru@gmail.com>",
@@ -19,6 +19,7 @@
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
     "cssnano": "^4.1.10",
     "eslint": "6.8.0",
